@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ESP32 Stepper Control with Position Cards</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #dfe9f3 0%, #ffffff 100%);
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 32px;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    video {
+      width: 80%;
+      max-width: 600px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      border: 2px solid #ccc;
+      margin-top: 20px;
+    }
+
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .card {
+      width: 100px;
+      height: 100px;
+      background-color: #f9f9f9;
+      border: 2px solid #ddd;
+      border-radius: 15px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .card:hover {
+      transform: scale(1.1);
+      background-color: #e3f2fd;
+      box-shadow: 0 10px 20px rgba(0, 123, 255, 0.3);
+      border-color: #2196f3;
+    }
+
+    .card.selected {
+      background-color: #4caf50;
+      color: #fff;
+      border-color: #4caf50;
+      box-shadow: 0 10px 20px rgba(76, 175, 80, 0.4);
+    }
+
+    .buttons {
+      margin-top: 40px;
+    }
+
+    button {
+      padding: 15px 35px;
+      margin: 15px;
+      font-size: 18px;
+      background-color: #2196f3;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0d8bf2;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 16px rgba(33, 150, 243, 0.3);
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        width: 80px;
+        height: 80px;
+        font-size: 20px;
+      }
+
+      button {
+        width: 80%;
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Live Video Feed & Stepper Control</h1>
+
+  <video id="live" autoplay playsinline></video>
+
+  <div class="cards" id="positionCards"></div>
+
+  <div class="buttons">
+    <button onclick="sendDirection('left')">Left</button>
+    <button onclick="sendDirection('right')">Right</button>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDPF0buvrdwfw98qqronhLOc22kphEFmjs",
+      authDomain: "waterponddata.firebaseapp.com",
+      databaseURL: "https://waterponddata-default-rtdb.firebaseio.com",
+      projectId: "waterponddata",
+      storageBucket: "waterponddata.appspot.com",
+      messagingSenderId: "503227899754",
+      appId: "1:503227899754:web:a82f279b2ac91b2deb8f13",
+      measurementId: "G-ZL8QTFHEL6"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    let selectedPosition = null;
+
+    const container = document.getElementById('positionCards');
+    for (let i = 1; i <= 8; i++) {
+      const card = document.createElement('div');
+      card.classList.add('card');
+      card.textContent = i;
+      card.dataset.position = i;
+      card.onclick = () => {
+        document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        selectedPosition = parseInt(card.dataset.position);
+
+        // Update only the position
+        set(ref(database, 'direction/position'), selectedPosition)
+          .then(() => console.log(`Position ${selectedPosition} set`))
+          .catch(error => console.error('Error setting position:', error));
+      };
+      container.appendChild(card);
+    }
+
+    window.sendDirection = function(direction) {
+      if (!selectedPosition) {
+        alert('Please select a position first.');
+        return;
+      }
+
+      // Update only the move
+      set(ref(database, 'direction/move'), direction)
+        .then(() => console.log(`Direction "${direction}" sent`))
+        .catch(error => console.error('Error setting direction:', error));
+    };
+
+    document.getElementById('live').src = "http://YOUR_ESP32_CAM_IP:81/stream"; // Replace with your ESP32-CAM IP
+  </script>
+
+</body>
+</html>

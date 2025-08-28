@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Home - Pond Monitoring</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+    import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+    
+    const firebaseConfig = {
+      apiKey: "AIzaSyCWKnkzcElMsfS8RrZpLC5Hf-qx_hDsvSE",
+      authDomain: "pond-water-monitoring.firebaseapp.com",
+      databaseURL: "https://pond-water-monitoring-default-rtdb.firebaseio.com",
+      projectId: "pond-water-monitoring",
+      storageBucket: "pond-water-monitoring.firebasestorage.app",
+      messagingSenderId: "10939313098",
+      appId: "1:10939313098:web:55ac00863e41ed87363d33",
+      measurementId: "G-HEEVW9LM5Y"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+
+    // Redirect to login page if not logged in
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = "index.html";
+      }
+    });
+
+    // Logout function
+    window.logout = function() {
+      signOut(auth).then(() => {
+        window.location.href = "index.html";
+      }).catch((error) => {
+        alert("Logout Error: " + error.message);
+      });
+    };
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css?family=Raleway:400,700');
+    body {
+      font-family: 'Raleway', sans-serif;
+      background: #f0f0f0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding-top: 50px;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 600px;
+    }
+    h1 { color: #3745b5; }
+    .nav-buttons {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+    .btn {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 16px;
+      color: white;
+      display: inline-block;
+    }
+    .dashboard-btn { background: #3745b5; }
+    .about-btn { background: #e46569; }
+    .logout-btn { background: #333; margin-top: 20px; }
+    .btn:hover { opacity: 0.8; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Welcome to Pond Monitoring System</h1>
+    <p>Monitor water quality and ensure safety for aquatic life.</p>
+    <div class="nav-buttons">
+      <a href="dashboard.html" class="btn dashboard-btn">View Data (Dashboard)</a>
+      <a href="about.html" class="btn about-btn">Know About the System</a>
+    </div>
+    <button onclick="logout()" class="btn logout-btn">Logout</button>
+  </div>
+</body>
+</html>
