@@ -2,6 +2,10 @@
 
 A static, browser-based interface for monitoring pond water and controlling an ESP32 camera/stepper setup. The site uses Firebase Authentication and Realtime Database for sign-in and sensor/control data, and embeds a ThingSpeak chart for temperature history.
 
+**Firebase Hosting:** [pond-water-monitoring.web.app](https://pond-water-monitoring.web.app)
+
+This is the project's existing Hosting address. The updated site is not deployed yet because the currently signed-in Firebase CLI account does not have access to the `pond-water-monitoring` project.
+
 ## Pages
 
 - `index.html` — Firebase email/password sign-in and account creation.
@@ -48,7 +52,14 @@ Then open `http://localhost:8000`. No package installation or build step is requ
 
 ## Deploy
 
-The files can be served by GitHub Pages or another static host. Configure the deployed domain in Firebase Authentication's authorized domains. Review both Firebase projects' Realtime Database rules before deployment: client-side page redirects are a user-interface guard, not database authorization.
+Firebase Hosting is configured in `firebase.json`, with `pond-water-monitoring` as the default project in `.firebaserc`. After signing in to an account with Hosting access to that Firebase project, deploy from the repository root:
+
+```powershell
+firebase login
+firebase deploy --only hosting --project pond-water-monitoring
+```
+
+Configure the deployed domain in Firebase Authentication's authorized domains. Review both Firebase projects' Realtime Database rules before deployment: client-side page redirects are a user-interface guard, not database authorization.
 
 The camera controller uses a separate Firebase project and does not sign in to that project's Authentication service. Its browser commands therefore do not inherit the user's main-project sign-in. If the camera database requires authenticated writes, configure authentication for that project or route commands through a trusted server; do not make the database publicly writable just to enable the page.
 
