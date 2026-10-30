@@ -6,6 +6,10 @@
       ".firebaserc",
       "README.md",
       "build",
+      ".git/**",
+      ".firebase/**",
+      "**/.git/**",
+      "**/.firebase/**",
       "**/.*",
       "**/node_modules/**"
     ],

@@ -4,7 +4,7 @@ A static, browser-based interface for monitoring pond water and controlling an E
 
 **Firebase Hosting:** [pond-water-monitoring.web.app](https://pond-water-monitoring.web.app)
 
-This is the project's existing Hosting address. The updated site is not deployed yet because the currently signed-in Firebase CLI account does not have access to the `pond-water-monitoring` project.
+The site is deployed to this Firebase Hosting address.
 
 ## Pages
 
