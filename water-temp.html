@@ -1,105 +1,52 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Water Temperature - Pond Monitoring</title>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyCWKnkzcElMsfS8RrZpLC5Hf-qx_hDsvSE",
-      authDomain: "pond-water-monitoring.firebaseapp.com",
-      databaseURL: "https://pond-water-monitoring-default-rtdb.firebaseio.com",
-      projectId: "pond-water-monitoring",
-      storageBucket: "pond-water-monitoring.firebasestorage.app",
-      messagingSenderId: "10939313098",
-      appId: "1:10939313098:web:55ac00863e41ed87363d33",
-      measurementId: "G-HEEVW9LM5Y"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-
-    window.addEventListener("DOMContentLoaded", () => {
-      const tempRef = ref(db, 'sensor/temperature');
-
-      onValue(tempRef, (snapshot) => {
-        const value = snapshot.val();
-        document.getElementById("realtime-temp").innerText = value ? value + " °C" : "No Data";
-      });
-    });
-
-    function goBack() {
-      window.location.href = "dashboard.html";
-    }
-  </script>
-
-  <style>
-    body {
-      font-family: Arial;
-      background: #f4f6f7;
-      padding: 20px;
-      text-align: center;
-    }
-
-    .container {
-      max-width: 700px;
-      margin: auto;
-      background: white;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-
-    h2 {
-      margin-bottom: 20px;
-    }
-
-    .temp-box {
-      font-size: 24px;
-      margin-bottom: 20px;
-      color: #2c3e50;
-    }
-
-    iframe {
-      margin-top: 20px;
-      border-radius: 10px;
-    }
-
-    .back-btn {
-      margin-top: 30px;
-      padding: 10px 20px;
-      background-color: #3498db;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    .back-btn:hover {
-      background-color: #2980b9;
-    }
-  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Live pond water temperature and historical trend chart.">
+  <title>Water temperature | Pondwatch</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script type="module" src="assets/js/auth.js"></script>
+  <script type="module" src="assets/js/water-temp.js"></script>
 </head>
-<body>
+<body data-page="protected">
+  <header class="site-header">
+    <a class="brand" href="home.html"><span class="brand-mark" aria-hidden="true">◉</span> Pondwatch</a>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="home.html">Home</a>
+      <a href="dashboard.html" aria-current="page">Dashboard</a>
+      <a href="about.html">Camera control</a>
+      <button type="button" data-logout>Sign out</button>
+    </nav>
+  </header>
 
-  <div class="container">
-    <h2>Real-Time Water Temperature</h2>
-    <div class="temp-box">
-      Current Temperature: <span id="realtime-temp">Loading...</span>
+  <main class="page-shell">
+    <p class="eyebrow">Water quality · Sensor detail</p>
+    <h1>Water temperature</h1>
+    <p class="lead">A live reading from your pond sensor, paired with the recent temperature history.</p>
+
+    <section class="card" aria-label="Current water temperature">
+      <p class="metric-status"><span class="status-dot" id="temperature-dot"></span><span id="temperature-status">Connecting to sensor…</span></p>
+      <p class="metric-value" id="realtime-temp" aria-live="polite">—</p>
+      <p class="metric-status">Firebase path: <code>sensor/temperature</code></p>
+    </section>
+
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Recent history</p>
+        <h2>Temperature trend</h2>
+      </div>
+      <p>ThingSpeak · Recent 60 results</p>
     </div>
-
-    <h3>Temperature Trend</h3>
-    <iframe width="450" height="260" style="border: 1px solid #cccccc;" 
-      src="https://thingspeak.com/channels/2906260/charts/1?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line">
+    <iframe
+      class="chart-frame"
+      title="Pond water temperature history"
+      loading="lazy"
+      src="https://thingspeak.com/channels/2906260/charts/1?bgcolor=%23ffffff&amp;color=%23176b58&amp;dynamic=true&amp;results=60&amp;type=line">
     </iframe>
-
-    <br>
-    <button class="back-btn" onclick="location.href='dashboard.html'">Back to Dashboard</button>
-  </div>
-
+    <p class="status-banner" id="auth-status" role="status" aria-live="polite" hidden></p>
+    <div class="button-row"><a class="button button-secondary" href="dashboard.html">← Back to dashboard</a></div>
+  </main>
+  <footer class="page-footer">The live value and chart may update at different intervals, depending on each service.</footer>
 </body>
 </html>

@@ -1,94 +1,64 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Home - Pond Monitoring</title>
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-    import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-    
-    const firebaseConfig = {
-      apiKey: "AIzaSyCWKnkzcElMsfS8RrZpLC5Hf-qx_hDsvSE",
-      authDomain: "pond-water-monitoring.firebaseapp.com",
-      databaseURL: "https://pond-water-monitoring-default-rtdb.firebaseio.com",
-      projectId: "pond-water-monitoring",
-      storageBucket: "pond-water-monitoring.firebasestorage.app",
-      messagingSenderId: "10939313098",
-      appId: "1:10939313098:web:55ac00863e41ed87363d33",
-      measurementId: "G-HEEVW9LM5Y"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth();
-
-    // Redirect to login page if not logged in
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        window.location.href = "index.html";
-      }
-    });
-
-    // Logout function
-    window.logout = function() {
-      signOut(auth).then(() => {
-        window.location.href = "index.html";
-      }).catch((error) => {
-        alert("Logout Error: " + error.message);
-      });
-    };
-  </script>
-  <style>
-    @import url('https://fonts.googleapis.com/css?family=Raleway:400,700');
-    body {
-      font-family: 'Raleway', sans-serif;
-      background: #f0f0f0;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      padding-top: 50px;
-    }
-    .container {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      width: 90%;
-      max-width: 600px;
-    }
-    h1 { color: #3745b5; }
-    .nav-buttons {
-      display: flex;
-      justify-content: space-around;
-      margin-top: 20px;
-    }
-    .btn {
-      padding: 12px 20px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      text-decoration: none;
-      font-size: 16px;
-      color: white;
-      display: inline-block;
-    }
-    .dashboard-btn { background: #3745b5; }
-    .about-btn { background: #e46569; }
-    .logout-btn { background: #333; margin-top: 20px; }
-    .btn:hover { opacity: 0.8; }
-  </style>
+  <meta name="description" content="Your pond monitoring home with links to live readings and camera controls.">
+  <title>Home | Pondwatch</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script type="module" src="assets/js/auth.js"></script>
 </head>
-<body>
-  <div class="container">
-    <h1>Welcome to Pond Monitoring System</h1>
-    <p>Monitor water quality and ensure safety for aquatic life.</p>
-    <div class="nav-buttons">
-      <a href="dashboard.html" class="btn dashboard-btn">View Data (Dashboard)</a>
-      <a href="about.html" class="btn about-btn">Know About the System</a>
+<body data-page="protected">
+  <header class="site-header">
+    <a class="brand" href="home.html"><span class="brand-mark" aria-hidden="true">◉</span> Pondwatch</a>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="home.html" aria-current="page">Home</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="about.html">Camera control</a>
+      <button type="button" data-logout>Sign out</button>
+    </nav>
+  </header>
+
+  <main class="page-shell">
+    <section class="hero">
+      <div class="hero-content">
+        <p class="eyebrow">Pond monitoring workspace</p>
+        <h1>A healthier pond, one reading at a time.</h1>
+        <p class="lead">Keep an eye on water temperature, follow the sensor data as it arrives, and access your pond camera controls from one place.</p>
+        <div class="button-row">
+          <a class="button" href="dashboard.html">Open dashboard <span aria-hidden="true">→</span></a>
+          <a class="button button-secondary" href="about.html">Open camera controls</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Your toolkit</p>
+        <h2>Monitor what matters</h2>
+      </div>
+      <p>Live values appear when their sensors are connected.</p>
     </div>
-    <button onclick="logout()" class="btn logout-btn">Logout</button>
-  </div>
+
+    <section class="card-grid" aria-label="Monitoring tools">
+      <a class="card card-link" href="dashboard.html">
+        <span class="card-icon" aria-hidden="true">◌</span>
+        <h3>Water quality</h3>
+        <p>View the available temperature reading and see which sensor measurements are not connected yet.</p>
+      </a>
+      <a class="card card-link" href="water-temp.html">
+        <span class="card-icon" aria-hidden="true">♨</span>
+        <h3>Temperature trends</h3>
+        <p>Follow the live water-temperature value and its ThingSpeak history chart.</p>
+      </a>
+      <a class="card card-link" href="about.html">
+        <span class="card-icon" aria-hidden="true">⌖</span>
+        <h3>Camera & movement</h3>
+        <p>Connect an ESP32 camera stream and send position or direction commands to the controller.</p>
+      </a>
+    </section>
+    <p class="status-banner" id="auth-status" role="status" aria-live="polite" hidden></p>
+  </main>
+  <footer class="page-footer">Pondwatch · Live readings depend on your configured sensors and Firebase connection.</footer>
 </body>
 </html>
